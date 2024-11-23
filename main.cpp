@@ -75,51 +75,114 @@ int main()
                 cin >> nombre;
                 cout << "Ingrese la cédula del pasajero: ";
                 cin >> cedula;
-                cout << "Ingrese la clase de silla (Ejecutiva/Economica): ";
-                cin >> clase_silla;
-                cout << "Ingrese la posición de la silla (Ventana/Pasillo/Centro): ";
-                cin >> posicion_silla;
 
+                // Validación cédula
+                while (cedula.length() != 10) {
+                    cout << "La cédula debe tener exactamente 10 dígitos. Intente de nuevo." << endl;
+                    // Volver a pedir la cédula
+                    cout << "Ingrese la cédula del pasajero (debe tener 10 dígitos): ";
+                    cin >> cedula;
+                }
+
+    // Validación clase de silla
+    cout << "Ingrese la clase de silla (Ejecutiva/Economica): ";
+    cin >> clase_silla;
+    while (clase_silla != "Ejecutiva" && clase_silla != "Economica") {
+        cout << "Clase de silla inválida. Ingrese 'Ejecutiva' o 'Economica': ";
+        cin >> clase_silla;
+    }
+
+    // Validación posición de la silla
+    cout << "Ingrese la posición de la silla (Ventana/Pasillo/Centro): ";
+    cin >> posicion_silla;
+    while (posicion_silla != "Ventana" && posicion_silla != "Pasillo" && posicion_silla != "Centro") {
+        cout << "Posición inválida. Ingrese 'Ventana', 'Pasillo' o 'Centro': ";
+        cin >> posicion_silla;
+    }
+
+    // Asignación
+    for (int i = 0; i < total_sillas; ++i) {
+        if (!silla_ocupada[i] && 
+            ((clase_silla == "Ejecutiva" && i < sillas_ejecutivas) || 
+            (clase_silla == "Economica" && i >= sillas_ejecutivas))) {
+            asiento = i + 1;
+            silla_ocupada[i] = true;
+            reservas_nombres[i] = nombre;
+            reservas_cedulas[i] = cedula;
+            sillas_ocupadas++;
+            break;
+        }
+    }
+
+    cout << "Silla asignada a " << nombre << " en el asiento " << asiento << " (" << clase_silla << ", " << posicion_silla << ")" << endl;
+    break;
+                
+            case 2:
+                cout << "Ingrese el número de asiento a consultar: ";
+    cin >> asiento;
+
+    // Validación número de asiento
+    while (asiento < 1 || asiento > total_sillas) {
+        cout << "Número de asiento inválido. Ingrese un número entre 1 y " << total_sillas << ": ";
+        cin >> asiento;
+    }
+
+    if (silla_ocupada[asiento - 1]) {
+        cout << "Reserva para " << reservas_nombres[asiento - 1] << " (Cédula: " << reservas_cedulas[asiento - 1] << ") en el asiento " << asiento << endl;
+    } else {
+        cout << "El asiento " << asiento << " está libre." << endl;
+    }
+    break;
+
+case 3:
+    cout << "Ingrese el número de asiento a eliminar: ";
+    cin >> asiento;
+
+    // Validación número de asiento
+    while (asiento < 1 || asiento > total_sillas) {
+        cout << "Número de asiento inválido. Ingrese un número entre 1 y " << total_sillas << ": ";
+        cin >> asiento;
+    }
+
+    if (silla_ocupada[asiento - 1]) {
+        silla_ocupada[asiento - 1] = false;
+        sillas_ocupadas--;
+        cout << "Reserva eliminada para el asiento " << asiento << endl;
+    } else {
+        cout << "El asiento " << asiento << " no tiene una reserva activa." << endl;
+    }
+    break;
+
+            case 4:
+                cout << "Ingrese la cédula del pasajero a buscar: ";
+                cin >> cedula;
                 for (int i = 0; i < total_sillas; ++i) {
-                    if (!silla_ocupada[i] && 
-                        ((clase_silla == "Ejecutiva" && i < sillas_ejecutivas) || 
-                        (clase_silla == "Economica" && i >= sillas_ejecutivas))) {
-                        asiento = i + 1;
-                        silla_ocupada[i] = true;
-                        reservas_nombres[i] = nombre;
-                        reservas_cedulas[i] = cedula;
-                        sillas_ocupadas++;
+                    if (reservas_cedulas[i] == cedula) {
+                        cout << "Pasajero " << reservas_nombres[i] << " encontrado en el asiento " << (i + 1) << endl;
                         break;
                     }
                 }
-
-                cout << "Silla asignada a " << nombre << " en el asiento " << asiento << " (" << clase_silla << ", " << posicion_silla << ")" << endl;
                 break;
 
-            case 2:
-                cout << "Resultado: " << endl;
-                break;
-
-            case 3:
-                cout << "Resultado: " << endl;
-                break;
-
-            case 4:
-                cout << "Resultado: " << endl;
-                        break;
-
-            case 5:
-                cout << "Resultado: " << endl;
+           case 5:
+                porcentaje_ocupacion = (float)sillas_ocupadas / total_sillas * 100;
+                cout << "El porcentaje de ocupación del avión es: " << porcentaje_ocupacion << "%" << endl;
                 break;
 
             case 6:
-                cout << "Resultado: " << endl;
+                cout << "El valor total de ventas es: $" << ventas_totales << endl;
                 break;
 
-            case 7:
-                cout << "Resultado: " << endl;
+           case 7:
+                if (sillas_ocupadas > 0) {
+                    promedio_ventas = ventas_totales / sillas_ocupadas;
+                } else 
+                {
+                    promedio_ventas = 0;
+                }
+                cout << "El valor promedio de venta por pasajero es: $" << promedio_ventas << endl;
                 break;
-
+                
             case 8:
                 cout << "Saliendo del programa." << endl;
                 break;
